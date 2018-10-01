@@ -87,13 +87,26 @@ func transform(nodes *runtime.Nodes) *Meshviewer {
 
 				continue
 			}
+
+			linkTargetNode := nodes.List[linkOrigin.TargetID]
+			var targetTQ float32 = 0
+			if linkTargetNode != nil {
+				ls := nodes.NodeLinksTo(linkTargetNode, linkOrigin.SourceID)
+				for _, l := range ls {
+					if l.TargetAddress == linkOrigin.SourceAddress {
+						targetTQ = l.TQ
+						break
+					}
+				}
+			}
+
 			link := &Link{
 				Source:        linkOrigin.SourceID,
 				SourceAddress: linkOrigin.SourceAddress,
 				Target:        linkOrigin.TargetID,
 				TargetAddress: linkOrigin.TargetAddress,
 				SourceTQ:      linkOrigin.TQ,
-				TargetTQ:      linkOrigin.TQ,
+				TargetTQ:      targetTQ,
 			}
 
 			linkType, linkTypeFound := typeList[linkOrigin.SourceAddress]

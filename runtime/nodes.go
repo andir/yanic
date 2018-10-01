@@ -141,6 +141,18 @@ func (nodes *Nodes) NodeLinks(node *Node) (result []Link) {
 	return result
 }
 
+func (nodes *Nodes) NodeLinksTo(node *Node, targetID string) (result []Link) {
+	links := nodes.NodeLinks(node)
+
+	for _, link := range links {
+		if link.SourceID == targetID {
+			result = append(result, link)
+		}
+	}
+
+	return result
+}
+
 // Periodically saves the cached DB to json file
 func (nodes *Nodes) worker() {
 	c := time.Tick(nodes.config.SaveInterval.Duration)
